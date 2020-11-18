@@ -25,12 +25,9 @@ TitleScene::TitleScene()
 	
 	startSprite->SetPosY(550);
 	exitSprite->SetPosY(700);
-
-
-
-
 	
-
+	server = new Server();
+	server->RunServer();
 }
 
 TitleScene::~TitleScene()
