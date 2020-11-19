@@ -25,9 +25,20 @@ TitleScene::TitleScene()
 	
 	startSprite->SetPosY(550);
 	exitSprite->SetPosY(700);
-	
-	server = new Server();
-	server->RunServer();
+
+	WSAStartup(MAKEWORD(2, 2), &wsaData);
+
+	hSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+	tAddr.sin_family = AF_INET;
+	tAddr.sin_port = htons(1234);
+	tAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	connect(hSocket, (SOCKADDR*)&tAddr, sizeof(tAddr));
+
+	send(hSocket, cMsg.c_str(), cMsg.length(), 0);
+	char cBuffer[1024] = {};
+	recv(hSocket, cBuffer, 1024, 0);
+
 }
 
 TitleScene::~TitleScene()
@@ -45,7 +56,8 @@ void TitleScene::Update(float eTime)
 	else if (ZeroInputMgr->GetKey(VK_LBUTTON) && exitSprite->IsOverlapped(ZeroInputMgr->GetClientPoint())) {
 		//PostQuitMessage(0);
 	}
-
+	cMsg = to_string(eTime);
+	send(hSocket, cMsg.c_str(), cMsg.length(), 0);
 }
 
 void TitleScene::Render()

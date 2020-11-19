@@ -1,14 +1,17 @@
 #pragma once
 #include <Zero.h>
 #include "include/ZeroIScene.h"
-#include "Server.h"
 class TitleScene :
     public ZeroIScene
 {
 private:
     ZeroFont* titleText;
     ZeroSprite* startSprite, * exitSprite;
-    Server* server;
+    WSADATA wsaData;
+    SOCKET hSocket;
+    SOCKADDR_IN tAddr = {};
+    string cMsg = "Client Send";
+
 public:
     TitleScene();
     ~TitleScene();

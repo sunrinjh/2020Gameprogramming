@@ -151,36 +151,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Door.cpp" />
-    <ClCompile Include="FootHolder.cpp" />
-    <ClCompile Include="Lever.cpp" />
-    <ClCompile Include="MapManager.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PressurePlate.cpp" />
-    <ClCompile Include="Server.cpp" />
-    <ClCompile Include="Stage1.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="TitleScene.cpp" />
-    <ClCompile Include="TopLayer.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Door.h" />
-    <ClInclude Include="FootHolder.h" />
-    <ClInclude Include="Lever.h" />
-    <ClInclude Include="MapManager.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="PressurePlate.h" />
-    <ClInclude Include="Server.h" />
-    <ClInclude Include="Stage1.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TestScene.h" />
     <ClInclude Include="TitleScene.h" />
-    <ClInclude Include="TopLayer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
