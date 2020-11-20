@@ -7,10 +7,6 @@ class TitleScene :
 private:
     ZeroFont* titleText;
     ZeroSprite* startSprite, * exitSprite;
-    WSADATA wsaData;
-    SOCKET hSocket;
-    SOCKADDR_IN tAddr = {};
-    string cMsg = "Client Send";
 
 public:
     TitleScene();
