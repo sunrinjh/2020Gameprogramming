@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="CreateRoom.cpp" />
     <ClCompile Include="ForTwoPlayerMap.cpp" />
+    <ClCompile Include="Ground.cpp" />
     <ClCompile Include="MapBase.cpp" />
     <ClCompile Include="MapManager.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -162,6 +163,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TestScene.cpp" />
+    <ClCompile Include="Tiles.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="VirtualPlayer.cpp" />
     <ClCompile Include="Wall.cpp" />
@@ -170,12 +172,14 @@
   <ItemGroup>
     <ClInclude Include="CreateRoom.h" />
     <ClInclude Include="ForTwoPlayerMap.h" />
+    <ClInclude Include="Ground.h" />
     <ClInclude Include="MapBase.h" />
     <ClInclude Include="MapManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SocketClient.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TestScene.h" />
+    <ClInclude Include="Tiles.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="VirtualPlayer.h" />
     <ClInclude Include="Wall.h" />

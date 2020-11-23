@@ -1,15 +1,30 @@
 #include "stdafx.h"
 #include "Wall.h"
+#include "Player.h"
 
 Wall::Wall()
 {
-	direction = right;
+	wallSprite = new ZeroSprite("Resources/Sprites/wall.png");
+
+	PushScene(wallSprite);
 }
 
-Wall::Wall(Direction direction)
+//Wall::Wall(Direction _direction)
+//{
+//	wallSprite = new ZeroSprite("Resources/Sprites/wall.png");
+//
+//	PushScene(wallSprite);
+//}
+
+Wall::~Wall()
 {
 }
 
-Wall::~Wall()
+void Wall::Render()
+{
+	wallSprite->Render();
+}
+
+void Wall::Update(float eTime)
 {
 }

@@ -1,17 +1,21 @@
 #pragma once
 #include <Zero.h>
-class Wall :	public ZeroIScene
+#include "Tiles.h"
+class Wall : public Tiles
 {
 private:
 	ZeroSprite* wallSprite;
-	enum Direction
-	{
-		left, right, top, buttom
-	};
-	Direction direction;
+
 public:
+	//enum class Direction
+	//{
+	//	LEFT, RIGHT, TOP, BUTTOM
+	//};
+	//Direction direction;
 	Wall();
-	Wall(Direction direction);
+	//Wall(Direction direction);
 	~Wall();
+	void Render();
+	void Update(float eTime);
 };
 

@@ -37,6 +37,12 @@
     <ClCompile Include="Wall.cpp">
       <Filter>Tiles</Filter>
     </ClCompile>
+    <ClCompile Include="Ground.cpp">
+      <Filter>Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiles.cpp">
+      <Filter>Tiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -70,6 +76,12 @@
       <Filter>Map</Filter>
     </ClInclude>
     <ClInclude Include="Wall.h">
+      <Filter>Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiles.h">
       <Filter>Tiles</Filter>
     </ClInclude>
   </ItemGroup>

@@ -11,10 +11,7 @@ MapManager::~MapManager()
 {
 }
 
-void MapManager::SetMap(MapBase map)
-{
-	map.GetMapArray()[1];
-}
+
 
 
 void MapManager::Update(float eTime)
