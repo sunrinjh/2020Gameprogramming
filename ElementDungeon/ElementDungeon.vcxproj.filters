@@ -19,8 +19,24 @@
     <ClCompile Include="SocketClient.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="CreateRoom.cpp" />
+    <ClCompile Include="CreateRoom.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MapBase.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="ForTwoPlayerMap.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="MapManager.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Wall.cpp">
+      <Filter>Tiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -38,8 +54,24 @@
     <ClInclude Include="SocketClient.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="CreateRoom.h" />
+    <ClInclude Include="CreateRoom.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MapBase.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="ForTwoPlayerMap.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="MapManager.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.h">
+      <Filter>Tiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="헤더 파일">
@@ -48,8 +80,11 @@
     <Filter Include="소스 파일">
       <UniqueIdentifier>{d5d38f8e-d60e-4ca4-b84a-863d7db2b1f9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Scene">
-      <UniqueIdentifier>{3d5749c1-6bf4-426b-bdcc-ed1f018c0ee0}</UniqueIdentifier>
+    <Filter Include="Map">
+      <UniqueIdentifier>{a2997dbd-bd56-4d7d-b908-4e535adc2610}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tiles">
+      <UniqueIdentifier>{dc48baee-4934-4569-bdd2-59a9f367bb37}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

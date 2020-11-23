@@ -35,7 +35,7 @@ void TestScene::Update(float eTime)
 {
 	ZeroIScene::Update(eTime);
 	player->Update(eTime);
-	socketClient->SendPlayerPos(&(player->Pos()));
+	//socketClient->SendPlayerPos(&(player->Pos()));
 }
 
 void TestScene::Render()
