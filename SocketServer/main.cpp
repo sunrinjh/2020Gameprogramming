@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
+#include <string>
 using namespace std;
 #pragma comment(lib, "ws2_32")
 #define BUFSIZE 1024
+
+int playerNumber = 1;
 
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
@@ -35,7 +38,11 @@ DWORD WINAPI ProcessClient(LPVOID arg)
         // 받은 데이터 출력
         buf[retval] = '\0';
         printf("[TCP /%s:%d] %s\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port), buf);
-
+        if ((strcmp(buf, "join")) == 0) {
+            retval = send(client_sock, to_string(playerNumber).c_str(),to_string(playerNumber).size(), 0);
+            cout << "join" << retval << endl;
+            ++playerNumber;
+        }
         // 데이터 보내기
         retval = send(client_sock, buf, retval, 0);
 
@@ -117,7 +124,7 @@ int main()
             printf("accept() 에러\n");
             continue;
         }
-
+        
         printf("TCP 서버, 클라이언트 접속 : IP 주소 = %s, 포트번호 = %d\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
 
         hThread = CreateThread(NULL, 0, ProcessClient, (LPVOID)client_sock, 0, &ThreadID);

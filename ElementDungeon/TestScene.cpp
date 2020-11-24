@@ -6,7 +6,8 @@ TestScene::TestScene()
 {
 	player = new Player();
 	PushScene(player);
-
+	virtualPlayer = new VirtualPlayer();
+	PushScene(virtualPlayer);
 	socketClient = new SocketClient();
 	socketClient->Init();
 	socketClient->JoinServer();
@@ -46,7 +47,7 @@ void TestScene::Update(float eTime)
 		if (map[playerLocationY - 1][playerLocationX] == 0)
 			playerLocation[1] -= 1;
 
-	}
+}
 	else if (ZeroInputMgr->GetKey(VK_DOWN) == INPUTMGR_KEYDOWN) {
 		if (map[playerLocationY+1][playerLocationX] == 0)
 			playerLocation[1] += 1;
@@ -109,7 +110,8 @@ void TestScene::Update(float eTime)
 	//cout << player->Pos() << endl;
 
 	socketClient->SendPlayerPos(&(player->Pos())); 
-	socketClient->CoutServerMessage();
+	//socketClient->CoutServerMessage();
+	//cout << socketClient->GetPlayerNumber() << endl;
 }
 
 void TestScene::Render()
@@ -119,7 +121,7 @@ void TestScene::Render()
 		(*iter)->Render();
 	}
 	player->Render();
-
+	virtualPlayer->Render();
 }
 
 ZeroVec TestScene::MoveTowards(ZeroVec* pos, float maxDistanceDelta)

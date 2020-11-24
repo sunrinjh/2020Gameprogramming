@@ -34,7 +34,7 @@ void SocketClient::Init(string ip)
 	tAddr.sin_port = htons(1234);
 	tAddr.sin_addr.s_addr = inet_addr(ip.c_str());
 	connect(hSocket, (SOCKADDR*)&tAddr, sizeof(tAddr));
-	send(hSocket, "test", 1024, 0);
+	//send(hSocket, "test", 1024, 0);
 }
 
 void SocketClient::SetIp(string ip)
@@ -46,7 +46,7 @@ void SocketClient::JoinServer()
 {
 	send(hSocket, "join", 1024, 0);
 	ZeroMemory(cBuffer, 1024);
-	//recv(hSocket, cBuffer, 1024, 0);
+	recv(hSocket, cBuffer, 1024, 0);
 	//cout << cBuffer << endl;
 	//playerNumber = stoi(cBuffer);
 
