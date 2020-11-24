@@ -108,7 +108,8 @@ void TestScene::Update(float eTime)
 	//player->SetPos(MoveTowards(new ZeroVec(playerLocationX * 64, playerLocationY * 64), 128* eTime));
 	//cout << player->Pos() << endl;
 
-	//socketClient->SendPlayerPos(&(player->Pos())); 
+	socketClient->SendPlayerPos(&(player->Pos())); 
+	socketClient->CoutServerMessage();
 }
 
 void TestScene::Render()

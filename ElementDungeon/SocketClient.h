@@ -22,5 +22,6 @@ public:
     int GetPlayerNumber();
     void SendPlayerPos(ZeroVec* zeroVec);
     ZeroVec* GetPlayerPos();
+    void CoutServerMessage();
 };
 

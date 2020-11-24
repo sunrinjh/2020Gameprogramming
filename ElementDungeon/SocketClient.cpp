@@ -94,3 +94,12 @@ ZeroVec* SocketClient::GetPlayerPos()
 	}
 	return *playerPos;
 }
+
+void SocketClient::CoutServerMessage()
+{
+	ZeroMemory(cBuffer, 1024);
+	recv(hSocket, cBuffer, 1024, 0);
+	if (cBuffer != nullptr) {
+		cout << cBuffer << endl;
+	}
+}

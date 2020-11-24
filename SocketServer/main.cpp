@@ -74,13 +74,13 @@ int main()
 
 
     long port;
-    port = atol("1234");
+    port = 1234;
 
     // bind()
     SOCKADDR_IN serveraddr;
     ZeroMemory(&serveraddr, sizeof(serveraddr));
     serveraddr.sin_family = AF_INET;
-    serveraddr.sin_port = htons(port);
+    serveraddr.sin_port = htons(1234);
 
     /*
     XP 이전에는 INADDR_ANY의 값에 빈 스트링을 넘겨줄 경우 INADDR_ANY로 세팅되었지만,
