@@ -3,12 +3,15 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include "Vector2.h"
+#include <vector>
+#include <sstream>
 using namespace std;
 #pragma comment(lib, "ws2_32")
 #define BUFSIZE 1024
 
 int playerNumber = 1;
-
+vector<Vector2*> playerPos;
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
     SOCKET client_sock = (SOCKET)arg;
@@ -28,7 +31,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
         retval = recv(client_sock, buf, BUFSIZE, 0);
         if (retval == SOCKET_ERROR)
         {
-            printf("수신() 에러\n");
+            cout << "수신() 에러\n";
             break;
         }
         else if (retval == 0)
@@ -37,14 +40,59 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
         // 받은 데이터 출력
         buf[retval] = '\0';
-        printf("[TCP /%s:%d] %s\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port), buf);
+        string s = buf;
+        //printf("[TCP /%s:%d] %s\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port), buf);
         if ((strcmp(buf, "join")) == 0) {
+            playerPos.push_back(new Vector2());
             retval = send(client_sock, to_string(playerNumber).c_str(),to_string(playerNumber).size(), 0);
-            cout << "join" << retval << endl;
+            cout << "join" << playerNumber << endl;
             ++playerNumber;
+            
+            
         }
+        if (s.substr(0, 3) == "pos") {
+            stringstream ss;
+            ss.str(s);
+            vector<string> tempStringVector;
+            string tempString;
+            while (getline(ss, tempString, ',')) {
+                tempStringVector.push_back(tempString);
+
+            }
+            switch (s.at(3))
+            {
+            case '1':
+                playerPos[0]->x = stof(tempStringVector[1]);
+                playerPos[0]->y = stof(tempStringVector[2]);
+                break;
+            case '2':
+                playerPos[1]->x = stof(tempStringVector[1]);
+                playerPos[1]->y = stof(tempStringVector[2]);
+                break;
+            case '3':
+                playerPos[2]->x = stof(tempStringVector[1]);
+                playerPos[2]->y = stof(tempStringVector[2]);
+                break;
+            case '4':
+                playerPos[3]->x = stof(tempStringVector[1]);
+                playerPos[3]->y = stof(tempStringVector[2]);
+                break;
+            default:
+                break;
+            }
+		}
+        string posSend = "pos,";
+        for (int i = 0; i < playerPos.size(); i++) {
+            posSend.append(to_string(playerPos[i]->x));
+            posSend.append(",");
+            posSend.append(to_string(playerPos[i]->y));
+        }
+        posSend.append("\0");
+        cout << posSend << endl;
+       
+        
         // 데이터 보내기
-        retval = send(client_sock, buf, retval, 0);
+        retval = send(client_sock, posSend.c_str(), 1024, 0);
 
         if (retval == SOCKET_ERROR)
         {
@@ -65,7 +113,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 int main()
 {
-
+  
     // 윈속초기화
     WSADATA wsa;
 

@@ -9,9 +9,7 @@ private:
     ZeroVec* playerPos[4] = { new ZeroVec(), };
     int playerNumber;
     char cBuffer[1024] = {};
-    vector<string> tempStringVector;
-    string tempString;
-    stringstream ss;
+
 public:
     SocketClient();
     ~SocketClient();

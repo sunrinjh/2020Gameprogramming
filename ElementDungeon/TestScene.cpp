@@ -111,7 +111,7 @@ void TestScene::Update(float eTime)
 
 	socketClient->SendPlayerPos(&(player->Pos())); 
 	//socketClient->CoutServerMessage();
-	//cout << socketClient->GetPlayerNumber() << endl;
+	socketClient->GetPlayerPos();
 }
 
 void TestScene::Render()
