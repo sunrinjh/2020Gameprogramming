@@ -10,7 +10,7 @@ using namespace std;
 #pragma comment(lib, "ws2_32")
 #define BUFSIZE 1024
 
-int playerNumber = 1;
+int playerNumber = 0;
 vector<Vector2*> playerPos;
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
@@ -36,21 +36,29 @@ DWORD WINAPI ProcessClient(LPVOID arg)
         }
         else if (retval == 0)
             break;
-
+        
 
         // 받은 데이터 출력
         buf[retval] = '\0';
         string s = buf;
-        //printf("[TCP /%s:%d] %s\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port), buf);
+        printf("[TCP /%s:%d] %s\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port), buf);
         if ((strcmp(buf, "join")) == 0) {
+            ++playerNumber;
+            cout << "Send Join" << endl;
             playerPos.push_back(new Vector2());
             retval = send(client_sock, to_string(playerNumber).c_str(),to_string(playerNumber).size(), 0);
             cout << "join" << playerNumber << endl;
-            ++playerNumber;
-            
-            
+
+        }
+        if ((strcmp(buf, "start")) == 0) {
+            string tempString = "start";
+            retval = send(client_sock, tempString.c_str(), tempString.size() , 0);
+        }
+        if ((strcmp(buf, "currentplayernum")) == 0) {
+            retval = send(client_sock, to_string(playerNumber).c_str(), 1024, 0);
         }
         if (s.substr(0, 3) == "pos") {
+            cout << "Send Pos" << endl;
             stringstream ss;
             ss.str(s);
             vector<string> tempStringVector;
@@ -80,19 +88,22 @@ DWORD WINAPI ProcessClient(LPVOID arg)
             default:
                 break;
             }
+            string posSend = "pos";
+            for (int i = 0; i < playerPos.size(); i++) {
+                posSend.append(",");
+                posSend.append(to_string(playerPos[i]->x));
+                posSend.append(",");
+                posSend.append(to_string(playerPos[i]->y));
+
+            }
+            posSend.append("\0");
+            cout << posSend << endl;
+
+
+            // 데이터 보내기
+            retval = send(client_sock, posSend.c_str(), 1024, 0);
 		}
-        string posSend = "pos,";
-        for (int i = 0; i < playerPos.size(); i++) {
-            posSend.append(to_string(playerPos[i]->x));
-            posSend.append(",");
-            posSend.append(to_string(playerPos[i]->y));
-        }
-        posSend.append("\0");
-        cout << posSend << endl;
-       
-        
-        // 데이터 보내기
-        retval = send(client_sock, posSend.c_str(), 1024, 0);
+
 
         if (retval == SOCKET_ERROR)
         {

@@ -154,6 +154,7 @@
     <ClCompile Include="CreateRoom.cpp" />
     <ClCompile Include="ForTwoPlayerMap.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="JoinRoom.cpp" />
     <ClCompile Include="MapBase.cpp" />
     <ClCompile Include="MapManager.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="CreateRoom.h" />
     <ClInclude Include="ForTwoPlayerMap.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="JoinRoom.h" />
     <ClInclude Include="MapBase.h" />
     <ClInclude Include="MapManager.h" />
     <ClInclude Include="Player.h" />

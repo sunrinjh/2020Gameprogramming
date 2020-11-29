@@ -17,6 +17,7 @@ using namespace std;
 #include <string>
 #include <tuple>
 #include <vector>
+#include <shellapi.h>
 
 #include <fcntl.h>
 #include <io.h>

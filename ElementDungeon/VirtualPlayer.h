@@ -4,6 +4,7 @@ class VirtualPlayer : public ZeroIScene
 {
 private:
     ZeroAnimation* playerAnimation;
+    
 public:
     VirtualPlayer();
     ~VirtualPlayer();

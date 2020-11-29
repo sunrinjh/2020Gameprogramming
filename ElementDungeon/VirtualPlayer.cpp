@@ -6,6 +6,7 @@ VirtualPlayer::VirtualPlayer()
 	playerAnimation = new ZeroAnimation(1.0f, false);
 	playerAnimation->PushSprite("Resources/Sprites/Character/pacman.png");
 	playerAnimation->SetRotCenter(playerAnimation->GetCurrentSprite()->Width() / 2, playerAnimation->GetCurrentSprite()->Height() / 2);
+	playerAnimation->SetColorG(0);
 	PushScene(playerAnimation);
 }
 
@@ -20,5 +21,6 @@ void VirtualPlayer::Update(float eTime)
 
 void VirtualPlayer::Render()
 {
+	ZeroIScene::Render();
 	playerAnimation->Render();
 }

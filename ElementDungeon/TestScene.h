@@ -12,10 +12,10 @@ private:
         RIGHT, LEFT, UP, DOWN
     };
     Direction direction;
-    SocketClient* socketClient;
     Player* player;
     VirtualPlayer* virtualPlayer;
     int playerLocation[2] = { 1,1 };
+    int playerNumber = 0;
     vector<Tiles*> tiles;
     byte map[16][16] = {
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},

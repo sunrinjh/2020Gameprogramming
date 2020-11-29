@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "TitleScene.h"
-#include "TestScene.h"
+#include "CreateRoom.h"
+#include "JoinRoom.h"
 
 TitleScene::TitleScene()
 {
@@ -22,8 +23,9 @@ TitleScene::TitleScene()
 	
 	startSprite->SetPosY(550);
 	exitSprite->SetPosY(700);
-
-
+	
+	
+	
 }
 
 TitleScene::~TitleScene()
@@ -35,11 +37,11 @@ void TitleScene::Update(float eTime)
 {
 	ZeroIScene::Update(eTime);
 	if (ZeroInputMgr->GetKey(VK_LBUTTON) && startSprite->IsOverlapped(ZeroInputMgr->GetClientPoint())) {
-		ZeroSceneMgr->ChangeScene(new TestScene());
+		ZeroSceneMgr->ChangeScene(new CreateRoom());
 		
 	}
 	else if (ZeroInputMgr->GetKey(VK_LBUTTON) && exitSprite->IsOverlapped(ZeroInputMgr->GetClientPoint())) {
-		
+		ZeroSceneMgr->ChangeScene(new JoinRoom());
 	}
 }
 

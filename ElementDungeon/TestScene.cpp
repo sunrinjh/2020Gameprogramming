@@ -8,9 +8,6 @@ TestScene::TestScene()
 	PushScene(player);
 	virtualPlayer = new VirtualPlayer();
 	PushScene(virtualPlayer);
-	socketClient = new SocketClient();
-	socketClient->Init();
-	socketClient->JoinServer();
 	for (int i = 0; i < (sizeof(map) / sizeof(map[0])); i++) {
 		for (int j = 0; j < (sizeof(map[0]) / sizeof(map[0][0])); j++) {
 			switch (map[i][j])
@@ -29,8 +26,8 @@ TestScene::TestScene()
 	playerLocation[0] = 1;
 	playerLocation[1] = 1;
 	player->SetPos(playerLocation[0] * 64, playerLocation[1] * 64);
-	direction = Direction::LEFT;
-
+	direction = Direction::RIGHT;
+	playerNumber = Socket->GetPlayerNumber();
 }
 
 TestScene::~TestScene()
@@ -62,56 +59,12 @@ void TestScene::Update(float eTime)
 			playerLocation[0] += 1;
 	}
 	player->SetPos(playerLocation[0] * 64, playerLocation[1] * 64);
-	/*if (ZeroInputMgr->GetKey(VK_UP) == INPUTMGR_KEYDOWN) {
-		direction = Direction::UP;
 
-	}
-	else if (ZeroInputMgr->GetKey(VK_DOWN) == INPUTMGR_KEYDOWN) {
-		if (map[++playerLocationY][playerLocationX] == 0)
-			direction = Direction::DOWN;
-	}
-	else if (ZeroInputMgr->GetKey(VK_LEFT) == INPUTMGR_KEYDOWN) {
-		if (map[playerLocationY][--playerLocationX] == 0)
-			direction = Direction::LEFT;
-
-	}
-	else if (ZeroInputMgr->GetKey(VK_RIGHT) == INPUTMGR_KEYDOWN) {
-		if (map[playerLocationY][++playerLocationX] == 0)
-			direction = Direction::RIGHT;
-	}
-	if (playerLocationX * 64 >= (int)player->Pos().x -2 && playerLocationX * 64 <= (int)player->Pos().x + 2)
-	{
-
-		switch (direction)
-		{
-		case TestScene::Direction::RIGHT:
-			if (map[playerLocationY][++playerLocationX] == 0)
-				playerLocation[0]++;
-			break;
-		case TestScene::Direction::LEFT:
-			if (map[playerLocationY][--playerLocationX] == 0)
-				playerLocation[0]--;
-			break;
-		case TestScene::Direction::UP:
-			if (map[--playerLocationY][playerLocationX] == 0)
-				playerLocation[1]--;
-			break;
-		case TestScene::Direction::DOWN:
-			if (map[++playerLocationY][playerLocationX] == 0)
-				playerLocation[1]++;
-			break;
-		default:
-			break;
-		}
+	Socket->SendPlayerPos(&(player->Pos())); 
+	Socket->GetPlayerPos();
+	virtualPlayer->SetPos(Socket->GetPlayer2Pos()->x,Socket->GetPlayer2Pos()->y);
 	
-		player->SetPos(playerLocation[0] * 64, playerLocation[1] * 64);
-	}*/
-	//player->SetPos(MoveTowards(new ZeroVec(playerLocationX * 64, playerLocationY * 64), 128* eTime));
-	//cout << player->Pos() << endl;
-
-	socketClient->SendPlayerPos(&(player->Pos())); 
-	//socketClient->CoutServerMessage();
-	socketClient->GetPlayerPos();
+	
 }
 
 void TestScene::Render()

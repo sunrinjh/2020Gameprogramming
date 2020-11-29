@@ -5,6 +5,10 @@ SocketClient::SocketClient()
 {
 	cout << "Socket Client Object Created" << endl;
 	playerNumber = 0;
+	for (int i = 0; i < 4; i++) {
+		playerPos[i]->x = 0;
+		playerPos[i]->y = 0;
+	}
 }
 
 SocketClient::~SocketClient()
@@ -45,14 +49,27 @@ void SocketClient::JoinServer()
 {
 	send(hSocket, "join", 1024, 0);
 	ZeroMemory(cBuffer, 1024);
-	recv(hSocket, cBuffer, 1024, 0);
-	playerNumber = stoi(cBuffer);
+	if (recv(hSocket, cBuffer, 1024, 0) != SOCKET_ERROR) {
+		playerNumber = stoi(cBuffer);
+		
+	}
 	cout << "Player Number : " << playerNumber << endl;
 }
 
 int SocketClient::GetPlayerNumber()
 {
 	return playerNumber;
+}
+
+int SocketClient::GetCurrentPlayerNumber()
+{
+	send(hSocket, "currentplayernum\0", 1024, 0);
+	ZeroMemory(cBuffer, 1024);
+	int tempInt = 0;
+	if (recv(hSocket, cBuffer, 1024, 0) != SOCKET_ERROR) {
+		tempInt = stoi(cBuffer);
+	}
+	return tempInt;
 }
 
 void SocketClient::SendPlayerPos(ZeroVec* zeroVec)
@@ -64,7 +81,7 @@ void SocketClient::SendPlayerPos(ZeroVec* zeroVec)
 	send(hSocket, msg.c_str(), msg.length(), 0);
 }
 
-ZeroVec* SocketClient::GetPlayerPos()
+void SocketClient::GetPlayerPos()
 {
 	ZeroMemory(cBuffer, 1024);
 	recv(hSocket, cBuffer, 1024, 0);
@@ -77,11 +94,38 @@ ZeroVec* SocketClient::GetPlayerPos()
 		while (getline(ss, temp_string, ',')) {
 
 			vector_string.push_back(temp_string);
-			cout << temp_string << endl;
 		}
 	}
-	return *playerPos;
+	int j = 0;
+	for (int i = 1; i < vector_string.size(); i+=2) {
+		playerPos[j]->x = stof(vector_string[i]);
+		playerPos[j]->y = stof(vector_string[i + 1]);
+		j++;
+	}
+	cout << playerPos[1]->x << endl;
 }
+
+ZeroVec* SocketClient::GetPlayer1Pos()
+{
+	
+	return playerPos[0];
+}
+
+ZeroVec* SocketClient::GetPlayer2Pos()
+{
+	return playerPos[1];
+}
+
+ZeroVec* SocketClient::GetPlayer3Pos()
+{
+	return playerPos[2];
+}
+
+ZeroVec* SocketClient::GetPlayer4Pos()
+{
+	return playerPos[3];
+}
+
 
 void SocketClient::CoutServerMessage()
 {
