@@ -27,7 +27,7 @@ void SocketClient::Init()
 	connect(hSocket, (SOCKADDR*)&tAddr, sizeof(tAddr));
 }
 
-void SocketClient::Init(string ip)
+int SocketClient::Init(string ip)
 {
 	cout << "SocketClient Init" << endl;
 	WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -36,7 +36,8 @@ void SocketClient::Init(string ip)
 	tAddr.sin_family = AF_INET;
 	tAddr.sin_port = htons(1234);
 	tAddr.sin_addr.s_addr = inet_addr(ip.c_str());
-	connect(hSocket, (SOCKADDR*)&tAddr, sizeof(tAddr));
+	int connectResult = connect(hSocket, (SOCKADDR*)&tAddr, sizeof(tAddr));
+	return connectResult;
 	//send(hSocket, "test", 1024, 0);
 }
 
@@ -45,15 +46,21 @@ void SocketClient::SetIp(string ip)
 	tAddr.sin_addr.s_addr = inet_addr(ip.c_str());
 }
 
-void SocketClient::JoinServer()
+int SocketClient::JoinServer()
 {
-	send(hSocket, "join", 1024, 0);
-	ZeroMemory(cBuffer, 1024);
-	if (recv(hSocket, cBuffer, 1024, 0) != SOCKET_ERROR) {
-		playerNumber = stoi(cBuffer);
-		
+	int retval = send(hSocket, "join", 5, 0);
+	if (retval != SOCKET_ERROR) {
+		ZeroMemory(cBuffer, 1024);
+		if (recv(hSocket, cBuffer, 1024, 0) != SOCKET_ERROR) {
+			playerNumber = stoi(cBuffer);
+			cout << "Player Number : " << playerNumber << endl;
+			return retval;
+		}
 	}
-	cout << "Player Number : " << playerNumber << endl;
+	else {
+		return retval;
+	}
+	
 }
 
 int SocketClient::GetPlayerNumber()
@@ -81,6 +88,11 @@ void SocketClient::SendPlayerPos(ZeroVec* zeroVec)
 	send(hSocket, msg.c_str(), msg.length(), 0);
 }
 
+void SocketClient::SendStringToServer(string s)
+{
+	send(hSocket, s.c_str(), s.length(), 0);
+}
+
 void SocketClient::GetPlayerPos()
 {
 	ZeroMemory(cBuffer, 1024);
@@ -103,6 +115,19 @@ void SocketClient::GetPlayerPos()
 		j++;
 	}
 	cout << playerPos[1]->x << endl;
+}
+
+string SocketClient::GetGameState()
+{
+	send(hSocket, "gamestate\0", 11, 0);
+	ZeroMemory(cBuffer, 1024);
+
+	if (recv(hSocket, cBuffer, 1024, 0) != SOCKET_ERROR) {
+		return cBuffer;
+	}
+	else {
+		return "wait";
+	}
 }
 
 ZeroVec* SocketClient::GetPlayer1Pos()

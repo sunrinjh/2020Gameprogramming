@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CreateRoom.h"
-
+#include "TestScene.h"
 CreateRoom::CreateRoom()
 {
 	ShellExecute(NULL, _T("open"), _T("SocketServer.exe"), NULL, NULL, SW_SHOW);
@@ -47,6 +47,8 @@ void CreateRoom::Update(float eTime)
 	if (ZeroInputMgr->GetKey(VK_SPACE) == INPUTMGR_KEYDOWN) {
 		switch (Socket->GetCurrentPlayerNumber()) {
 		case 2:
+			Socket->SendStringToServer("start\0");
+			cout << "sending" << endl;
 			break;
 		case 3:
 			break;
@@ -56,5 +58,8 @@ void CreateRoom::Update(float eTime)
 			errorMessage->SetString("인원이 충분하지 않습니다");
 			break;
 		}
+	}
+	if (Socket->GetGameState() == "start") {
+		ZeroSceneMgr->ChangeScene(new TestScene());
 	}
 }

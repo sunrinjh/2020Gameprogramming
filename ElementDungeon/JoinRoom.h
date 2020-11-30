@@ -6,7 +6,9 @@ class JoinRoom : public ZeroIScene
 private:
 	string ip;
 	ZeroFont* ipFont;
+	ZeroFont* errorMessage;
 	int playerNumber;
+	bool serverJoined;
 public:
 	JoinRoom();
 	~JoinRoom();

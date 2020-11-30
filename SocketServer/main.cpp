@@ -19,7 +19,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
     SOCKADDR_IN clientaddr;
     int addrlen;
     int retval;
-
+    string gamestate = "wait";
     addrlen = sizeof(clientaddr);
     getpeername(client_sock, (SOCKADDR*)&clientaddr, &addrlen);
 
@@ -41,7 +41,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
         // 받은 데이터 출력
         buf[retval] = '\0';
         string s = buf;
-        printf("[TCP /%s:%d] %s\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port), buf);
+        //printf("[TCP /%s:%d] %s\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port), buf);
         if ((strcmp(buf, "join")) == 0) {
             ++playerNumber;
             cout << "Send Join" << endl;
@@ -50,15 +50,19 @@ DWORD WINAPI ProcessClient(LPVOID arg)
             cout << "join" << playerNumber << endl;
 
         }
-        if ((strcmp(buf, "start")) == 0) {
-            string tempString = "start";
-            retval = send(client_sock, tempString.c_str(), tempString.size() , 0);
+        if ((strcmp(buf,"start")) == 0) {
+            gamestate = "start";
+            
+        }
+        if ((strcmp(buf, "gamestate")) == 0) {
+            cout << gamestate << endl;
+            retval = send(client_sock, gamestate.c_str(), gamestate.size(), 0);
         }
         if ((strcmp(buf, "currentplayernum")) == 0) {
             retval = send(client_sock, to_string(playerNumber).c_str(), 1024, 0);
         }
         if (s.substr(0, 3) == "pos") {
-            cout << "Send Pos" << endl;
+            //cout << "Send Pos" << endl;
             stringstream ss;
             ss.str(s);
             vector<string> tempStringVector;
@@ -97,7 +101,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
             }
             posSend.append("\0");
-            cout << posSend << endl;
+            //cout << posSend << endl;
 
 
             // 데이터 보내기

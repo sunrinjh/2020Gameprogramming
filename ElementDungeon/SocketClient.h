@@ -23,13 +23,15 @@ public:
     SocketClient();
     ~SocketClient();
     void Init();
-    void Init(string ip);
+    int Init(string ip);
     void SetIp(string ip);
-    void JoinServer();
+    int JoinServer();
     int GetPlayerNumber();
     int GetCurrentPlayerNumber();
     void SendPlayerPos(ZeroVec* zeroVec);
+    void SendStringToServer(string s);
     void GetPlayerPos();
+    string GetGameState();
     ZeroVec* GetPlayer1Pos();
     ZeroVec* GetPlayer2Pos();
     ZeroVec* GetPlayer3Pos();
