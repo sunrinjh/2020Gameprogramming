@@ -2,9 +2,12 @@
 #include "TestScene.h"
 #include "Wall.h"
 #include "Ground.h"
+
 TestScene::TestScene()
 {
 	player = new Player();
+	moveSpeed = 128;
+	isMoveable = true;
 	PushScene(player);
 	virtualPlayer = new VirtualPlayer();
 	PushScene(virtualPlayer);
@@ -28,6 +31,7 @@ TestScene::TestScene()
 	player->SetPos(playerLocation[0] * 64, playerLocation[1] * 64);
 	direction = Direction::RIGHT;
 	playerNumber = Socket->GetPlayerNumber();
+
 }
 
 TestScene::~TestScene()
@@ -36,33 +40,26 @@ TestScene::~TestScene()
 
 void TestScene::Update(float eTime)
 {
+	
 	ZeroIScene::Update(eTime);
 	player->Update(eTime);
-	int playerLocationX = playerLocation[0];
-	int playerLocationY = playerLocation[1];
-	if (ZeroInputMgr->GetKey(VK_UP) == INPUTMGR_KEYDOWN) {
-		if (map[playerLocationY - 1][playerLocationX] == 0)
-			playerLocation[1] -= 1;
+	Move(eTime);
 
-}
-	else if (ZeroInputMgr->GetKey(VK_DOWN) == INPUTMGR_KEYDOWN) {
-		if (map[playerLocationY+1][playerLocationX] == 0)
-			playerLocation[1] += 1;
-	}
-	else if (ZeroInputMgr->GetKey(VK_LEFT) == INPUTMGR_KEYDOWN) {
-		if (map[playerLocationY][playerLocationX-1] == 0)
-			playerLocation[0] -= 1;
-
-	}
-	else if (ZeroInputMgr->GetKey(VK_RIGHT) == INPUTMGR_KEYDOWN) {
-		if (map[playerLocationY][playerLocationX+1] == 0)
-			playerLocation[0] += 1;
-	}
-	player->SetPos(playerLocation[0] * 64, playerLocation[1] * 64);
 
 	Socket->SendPlayerPos(&(player->Pos())); 
 	Socket->GetPlayerPos();
-	virtualPlayer->SetPos(Socket->GetPlayer2Pos()->x,Socket->GetPlayer2Pos()->y);
+	switch (playerNumber)
+	{
+	case 1:
+		virtualPlayer->SetPos(Socket->GetPlayer2Pos()->x, Socket->GetPlayer2Pos()->y);
+		break;
+	case 2:
+		virtualPlayer->SetPos(Socket->GetPlayer1Pos()->x, Socket->GetPlayer1Pos()->y);
+		break;
+	default:
+		break;
+	}
+	
 	
 	
 }
@@ -75,6 +72,124 @@ void TestScene::Render()
 	}
 	player->Render();
 	virtualPlayer->Render();
+}
+
+void TestScene::Move(float eTime)
+{
+	if (directionBufferTimer < 0) {
+		directionBufferTimer = 1;
+		directionBuffer = direction;
+	}
+	else {
+		directionBufferTimer -= eTime;
+	}
+	//키보드 인풋 받아서 버퍼에 넣음
+	if (ZeroInputMgr->GetKey(VK_UP) == INPUTMGR_KEYDOWN) {
+		directionBuffer = Direction::UP;
+	}
+	else if (ZeroInputMgr->GetKey(VK_DOWN) == INPUTMGR_KEYDOWN) {
+		directionBuffer = Direction::DOWN;
+	}
+	else if (ZeroInputMgr->GetKey(VK_LEFT) == INPUTMGR_KEYDOWN) {
+		directionBuffer = Direction::LEFT;
+	}
+	else if (ZeroInputMgr->GetKey(VK_RIGHT) == INPUTMGR_KEYDOWN) {
+		directionBuffer = Direction::RIGHT;
+	}
+	if (directionBuffer != direction) {
+		switch (directionBuffer)
+		{
+		case TestScene::Direction::RIGHT:
+			if (direction == Direction::LEFT) {
+				direction = directionBuffer;
+			}
+			break;
+		case TestScene::Direction::LEFT:
+			if (direction == Direction::RIGHT) {
+				direction = directionBuffer;
+			}
+			break;
+		case TestScene::Direction::UP:
+			if (direction == Direction::DOWN) {
+				direction = directionBuffer;
+			}
+			break;
+		case TestScene::Direction::DOWN:
+			if (direction == Direction::UP) {
+				direction = directionBuffer;
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	isMoveable = true;
+	float playerX = player->Pos().x;
+	float playerY = player->Pos().y;
+
+	//타일 가운데에 있는지 검사
+	if ((abs(fmod(playerX, 64)) < 2) && (abs(fmod(playerY, 64)) < 2)) {
+		//충돌 처리
+		int relativeX = round(playerX) / 64;
+		int relativeY = round(playerY) / 64;
+		direction = directionBuffer;
+
+		switch (direction)
+		{
+		case TestScene::Direction::RIGHT:
+			if (map[relativeY][relativeX + 1] == 1) {
+				player->SetPos(round(playerX), round(playerY));
+				isMoveable = false;
+			}
+			break;
+		case TestScene::Direction::LEFT:
+			if (map[relativeY][relativeX -1] == 1) {
+				player->SetPos(round(playerX), round(playerY));
+				isMoveable = false;
+			}
+			break;
+		case TestScene::Direction::UP:
+			if (map[relativeY-1][relativeX] == 1) {
+				player->SetPos(round(playerX), round(playerY));
+				isMoveable = false;
+			}
+			break;
+		case TestScene::Direction::DOWN:
+			if (map[relativeY + 1][relativeX] == 1) {
+				player->SetPos(round(playerX), round(playerY));
+				isMoveable = false;
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	
+	
+	//최종 이동 처리
+	if (isMoveable) {
+		switch (direction)
+		{
+		case TestScene::Direction::RIGHT:
+			player->AddPosX(moveSpeed * eTime);
+			//player->SetPosY(round(player->Pos().y));
+			break;
+		case TestScene::Direction::LEFT:
+			player->AddPosX(-moveSpeed * eTime);
+			//player->SetPosY(round(player->Pos().y));
+			break;
+		case TestScene::Direction::UP:
+			player->AddPosY(-moveSpeed * eTime);
+			//player->SetPosX(round(player->Pos().x));
+			break;
+		case TestScene::Direction::DOWN:
+			player->AddPosY(moveSpeed * eTime);
+			//player->SetPosX(round(player->Pos().x));
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 ZeroVec TestScene::MoveTowards(ZeroVec* pos, float maxDistanceDelta)

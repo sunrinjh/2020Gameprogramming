@@ -60,6 +60,7 @@ void CreateRoom::Update(float eTime)
 		}
 	}
 	if (Socket->GetGameState() == "start") {
+		cout << Socket->GetGameState();
 		ZeroSceneMgr->ChangeScene(new TestScene());
 	}
 }

@@ -52,7 +52,6 @@ void JoinRoom::Update(float eTime)
 		}
 	}
 	if (serverJoined) {
-		cout << Socket->GetGameState() << endl;
 		if (Socket->GetGameState() == "start") {
 			ZeroSceneMgr->ChangeScene(new TestScene());
 		}

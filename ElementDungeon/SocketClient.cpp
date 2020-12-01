@@ -70,7 +70,7 @@ int SocketClient::GetPlayerNumber()
 
 int SocketClient::GetCurrentPlayerNumber()
 {
-	send(hSocket, "currentplayernum\0", 1024, 0);
+	send(hSocket, "currentplayernum", 17, 0);
 	ZeroMemory(cBuffer, 1024);
 	int tempInt = 0;
 	if (recv(hSocket, cBuffer, 1024, 0) != SOCKET_ERROR) {
@@ -114,7 +114,7 @@ void SocketClient::GetPlayerPos()
 		playerPos[j]->y = stof(vector_string[i + 1]);
 		j++;
 	}
-	cout << playerPos[1]->x << endl;
+	//cout << playerPos[1]->x << endl;
 }
 
 string SocketClient::GetGameState()
@@ -122,12 +122,12 @@ string SocketClient::GetGameState()
 	send(hSocket, "gamestate\0", 11, 0);
 	ZeroMemory(cBuffer, 1024);
 
-	if (recv(hSocket, cBuffer, 1024, 0) != SOCKET_ERROR) {
-		return cBuffer;
-	}
-	else {
-		return "wait";
-	}
+	recv(hSocket, cBuffer, 1024, 0);
+	//cout << cBuffer << endl;
+	return cBuffer;
+	
+	
+		
 }
 
 ZeroVec* SocketClient::GetPlayer1Pos()

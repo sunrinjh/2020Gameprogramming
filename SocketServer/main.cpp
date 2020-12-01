@@ -12,6 +12,7 @@ using namespace std;
 
 int playerNumber = 0;
 vector<Vector2*> playerPos;
+string gamestate = "wait";
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
     SOCKET client_sock = (SOCKET)arg;
@@ -19,7 +20,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
     SOCKADDR_IN clientaddr;
     int addrlen;
     int retval;
-    string gamestate = "wait";
+
     addrlen = sizeof(clientaddr);
     getpeername(client_sock, (SOCKADDR*)&clientaddr, &addrlen);
 
@@ -44,10 +45,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
         //printf("[TCP /%s:%d] %s\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port), buf);
         if ((strcmp(buf, "join")) == 0) {
             ++playerNumber;
-            cout << "Send Join" << endl;
             playerPos.push_back(new Vector2());
             retval = send(client_sock, to_string(playerNumber).c_str(),to_string(playerNumber).size(), 0);
-            cout << "join" << playerNumber << endl;
 
         }
         if ((strcmp(buf,"start")) == 0) {
@@ -55,14 +54,12 @@ DWORD WINAPI ProcessClient(LPVOID arg)
             
         }
         if ((strcmp(buf, "gamestate")) == 0) {
-            cout << gamestate << endl;
             retval = send(client_sock, gamestate.c_str(), gamestate.size(), 0);
         }
         if ((strcmp(buf, "currentplayernum")) == 0) {
             retval = send(client_sock, to_string(playerNumber).c_str(), 1024, 0);
         }
         if (s.substr(0, 3) == "pos") {
-            //cout << "Send Pos" << endl;
             stringstream ss;
             ss.str(s);
             vector<string> tempStringVector;
@@ -101,10 +98,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
             }
             posSend.append("\0");
-            //cout << posSend << endl;
-
-
-            // 데이터 보내기
             retval = send(client_sock, posSend.c_str(), 1024, 0);
 		}
 

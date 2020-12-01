@@ -11,8 +11,12 @@ private:
     enum class Direction {
         RIGHT, LEFT, UP, DOWN
     };
+    Direction directionBuffer;
     Direction direction;
+    float directionBufferTimer = 1;
     Player* player;
+    float moveSpeed;
+    bool isMoveable;
     VirtualPlayer* virtualPlayer;
     int playerLocation[2] = { 1,1 };
     int playerNumber = 0;
@@ -42,6 +46,7 @@ public:
     ~TestScene();
     void Update(float eTime);
     void Render();
+    void Move(float eTime);
     ZeroVec MoveTowards(ZeroVec* pos, float maxDistanceDelta);
 };
 
