@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CreateRoom.cpp" />
+    <ClCompile Include="Food.cpp" />
     <ClCompile Include="ForTwoPlayerMap.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="JoinRoom.cpp" />
@@ -172,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CreateRoom.h" />
+    <ClInclude Include="Food.h" />
     <ClInclude Include="ForTwoPlayerMap.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="JoinRoom.h" />

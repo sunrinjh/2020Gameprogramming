@@ -3,6 +3,7 @@
 
 Ground::Ground()
 {
+	
 	groundSprite = new ZeroSprite("Resources/Sprites/road.png");
 	PushScene(groundSprite);
 }

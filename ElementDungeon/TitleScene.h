@@ -5,9 +5,10 @@ class TitleScene :
     public ZeroIScene
 {
 private:
-    ZeroFont* titleText;
-    ZeroSprite* startSprite, * exitSprite;
-
+    ZeroSprite* createSprite, * joinSprite, * backgroundSprite, * exitSprite, * backboard;
+    ZeroAnimation* pacmanAnimation;
+    ZeroFont* exitText;
+    bool exitState[2] = { false,false };
 public:
     TitleScene();
     ~TitleScene();

@@ -5,18 +5,13 @@ class Player :
 {
 private:
     ZeroAnimation* playerAnimation;
-    void Move(float eTime);
-    //movingDirection은 0123순으로 위 오른쪽 아랫쪽 왼쪽
-    int movingDirection;
-    int movingDirectionBuffer;
-    float moveSpeed;
 public:
     Player();
+    //0은 player 1은 빨강, 2는 분홍, 3은 파랑
+    Player(int type);
     ~Player();
     void Render();
     void Update(float eTime);
     ZeroSprite* GetCurrentSprite();
-    void SetPlayerPos(float x, float y);
-    void SetPlayerPos(ZeroVec vec);
 };
 

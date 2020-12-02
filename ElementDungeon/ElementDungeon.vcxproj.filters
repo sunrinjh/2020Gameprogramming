@@ -46,6 +46,9 @@
     <ClCompile Include="JoinRoom.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Food.cpp">
+      <Filter>Tiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -88,6 +91,9 @@
       <Filter>Tiles</Filter>
     </ClInclude>
     <ClInclude Include="JoinRoom.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Food.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

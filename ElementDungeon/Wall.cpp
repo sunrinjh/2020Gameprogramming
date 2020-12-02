@@ -4,6 +4,7 @@
 
 Wall::Wall()
 {
+	type = Type::WALL;
 	wallSprite = new ZeroSprite("Resources/Sprites/wall.png");
 
 	PushScene(wallSprite);

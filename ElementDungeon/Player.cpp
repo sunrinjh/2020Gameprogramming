@@ -5,13 +5,31 @@
 
 Player::Player()
 {
-	playerAnimation = new ZeroAnimation(1.0f, false);
-    playerAnimation->PushSprite("Resources/Sprites/Character/pacman.png");
+	playerAnimation = new ZeroAnimation(2.f);
+    playerAnimation->PushSprite("Resources/Sprites/Character/pacman_0.png");
+    playerAnimation->PushSprite("Resources/Sprites/Character/pacman_1.png");
 	playerAnimation->SetRotCenter(playerAnimation->GetCurrentSprite()->Width() / 2, playerAnimation->GetCurrentSprite()->Height() / 2);
-    PushScene(playerAnimation);
-	movingDirection = -1;
-	movingDirectionBuffer = -1;
-	moveSpeed = 100;
+	PushScene(playerAnimation);
+}
+
+Player::Player(int type)
+{
+	playerAnimation = new ZeroAnimation(2.f);
+	switch (type)
+	{
+	case 0:
+		playerAnimation->PushSprite("Resources/Sprites/Character/pacman_0.png");
+		playerAnimation->PushSprite("Resources/Sprites/Character/pacman_1.png");
+		break;
+	case 1:
+		playerAnimation->PushSprite("Resources/Sprites/Character/red_right_0.png");
+		playerAnimation->PushSprite("Resources/Sprites/Character/red_right_1.png");
+		break;
+	default:
+		break;
+	}
+	playerAnimation->SetRotCenter(playerAnimation->GetCurrentSprite()->Width() / 2, playerAnimation->GetCurrentSprite()->Height() / 2);
+	PushScene(playerAnimation);
 }
 
 Player::~Player()
@@ -20,30 +38,16 @@ Player::~Player()
 
 void Player::Render()
 {
+	ZeroIScene::Render();
 	playerAnimation->Render();
 }
 
 void Player::Update(float eTime)
 {
-
 	ZeroIScene::Update(eTime);
-	Move(eTime);
-}
-
-void Player::Move(float eTime)
-{
-
 }
 
 ZeroSprite* Player::GetCurrentSprite()
 {
-    return nullptr;
-}
-
-void Player::SetPlayerPos(float x, float y)
-{
-}
-
-void Player::SetPlayerPos(ZeroVec vec)
-{
+    return playerAnimation->GetCurrentSprite();
 }

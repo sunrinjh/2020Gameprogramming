@@ -1,15 +1,34 @@
 #include "stdafx.h"
 #include "TestScene.h"
 #include "Wall.h"
-#include "Ground.h"
+#include "Food.h"
+
 
 TestScene::TestScene()
 {
-	player = new Player();
-	moveSpeed = 128;
+	foodCounter = 0;
+	switch (playerNumber = Socket->GetPlayerNumber()) {
+	case 1:
+		player = new Player(0);
+		virtualPlayer = new VirtualPlayer(1);
+		moveSpeed = 128;
+		break;
+	case 2:
+		player = new Player(1);
+		virtualPlayer = new VirtualPlayer(0);
+		moveSpeed = 144;
+		break;
+	default:
+		player = new Player(0);
+		virtualPlayer = new VirtualPlayer(1);
+		moveSpeed = 128;
+		break;
+	}
+	playerHealth = 3;
+	virtualPlayer->SetRotCenter(32, 32);
+	player->SetRotCenter(32, 32);
 	isMoveable = true;
 	PushScene(player);
-	virtualPlayer = new VirtualPlayer();
 	PushScene(virtualPlayer);
 	for (int i = 0; i < (sizeof(map) / sizeof(map[0])); i++) {
 		for (int j = 0; j < (sizeof(map[0]) / sizeof(map[0][0])); j++) {
@@ -18,10 +37,13 @@ TestScene::TestScene()
 			case 1:
 				tiles.push_back(new Wall());
 				tiles.back()->SetPos(j * 64, i * 64);
+				tiles.back()->SetName("Wall");
 				break;
 			case 0:
-				tiles.push_back(new Ground());
+				tiles.push_back(new Food());
 				tiles.back()->SetPos(j * 64, i * 64);
+				tiles.back()->SetName("Food");
+				foodCounter++;
 				break;
 			}
 		}
@@ -30,7 +52,7 @@ TestScene::TestScene()
 	playerLocation[1] = 1;
 	player->SetPos(playerLocation[0] * 64, playerLocation[1] * 64);
 	direction = Direction::RIGHT;
-	playerNumber = Socket->GetPlayerNumber();
+
 
 }
 
@@ -42,16 +64,22 @@ void TestScene::Update(float eTime)
 {
 	
 	ZeroIScene::Update(eTime);
+	float virtualPlayerPos[2] = { virtualPlayer->Pos().x, virtualPlayer->Pos().y };
+	float playerPos[2] = { player->Pos().x, player->Pos().y };
 	player->Update(eTime);
+	virtualPlayer->Update(eTime);
 	Move(eTime);
-
-
-	Socket->SendPlayerPos(&(player->Pos())); 
+	EatFood();
+	Socket->SendPlayerPos(&(player->Pos()));
 	Socket->GetPlayerPos();
 	switch (playerNumber)
 	{
 	case 1:
 		virtualPlayer->SetPos(Socket->GetPlayer2Pos()->x, Socket->GetPlayer2Pos()->y);
+		if (player->GetCurrentSprite()->IsOverlapped(virtualPlayer->GetCurrentSprite()))
+		{
+			cout << "面倒!" << endl;
+		}
 		break;
 	case 2:
 		virtualPlayer->SetPos(Socket->GetPlayer1Pos()->x, Socket->GetPlayer1Pos()->y);
@@ -59,9 +87,7 @@ void TestScene::Update(float eTime)
 	default:
 		break;
 	}
-	
-	
-	
+	TurnAnimation(playerPos[0],playerPos[1], virtualPlayerPos[0], virtualPlayerPos[1]);
 }
 
 void TestScene::Render()
@@ -76,6 +102,7 @@ void TestScene::Render()
 
 void TestScene::Move(float eTime)
 {
+	
 	if (directionBufferTimer < 0) {
 		directionBufferTimer = 1;
 		directionBuffer = direction;
@@ -172,6 +199,7 @@ void TestScene::Move(float eTime)
 		{
 		case TestScene::Direction::RIGHT:
 			player->AddPosX(moveSpeed * eTime);
+			
 			//player->SetPosY(round(player->Pos().y));
 			break;
 		case TestScene::Direction::LEFT:
@@ -189,6 +217,77 @@ void TestScene::Move(float eTime)
 		default:
 			break;
 		}
+	}
+}
+
+void TestScene::TurnAnimation(float x, float y, float vx, float vy)
+{
+	float virtualPlayerPos[2] = { virtualPlayer->Pos().x, virtualPlayer->Pos().y };
+	float playerPos[2] = { player->Pos().x, player->Pos().y };
+	if (playerPos[0] != x) {
+		if (x < playerPos[0]) {
+			player->SetRot(0);
+		}
+		else {
+			player->SetRot(180);
+		}
+	}
+	else if (playerPos[1] != y) {
+		if (y < playerPos[1]) {
+			player->SetRot(90);
+		}
+		else {
+			player->SetRot(-90);
+		}
+	}
+	if (virtualPlayerPos[0] != vx) {
+		if (vx < virtualPlayerPos[0]) {
+			virtualPlayer->SetRot(0);
+		}
+		else {
+			virtualPlayer->SetRot(180);
+		}
+	}
+	if (virtualPlayerPos[1] != vy) {
+		if (vy < virtualPlayerPos[1]) {
+			virtualPlayer->SetRot(90);
+		}
+		else {
+			virtualPlayer->SetRot(-90);
+		}
+	}
+}
+
+void TestScene::EatFood()
+{
+	float playerX = player->Pos().x;
+	float playerY = player->Pos().y;
+	switch (playerNumber)
+	{
+	case 1:
+		playerX = player->Pos().x;
+		playerY = player->Pos().y;
+		break;
+	case 2:
+		playerX = virtualPlayer->Pos().x;
+		playerY = virtualPlayer->Pos().y;
+		break;
+	default:
+		break;
+	}
+	if ((abs(fmod(playerX, 64)) < 5) && (abs(fmod(playerY, 64)) < 5)) {
+		//面倒 贸府
+		int relativeX = round(playerX) / 64;
+		int relativeY = round(playerY) / 64;
+		
+		if(tiles[(relativeY) * sizeof(map[0])/sizeof(map[0][0]) + relativeX]->GetEaten() == false){
+			tiles[(relativeY) * sizeof(map[0])/sizeof(map[0][0]) + relativeX]->SetEaten(true);
+			foodCounter--;
+			if (foodCounter == 0) {
+				cout << "gameover" << endl;
+			}
+		}
+		
 	}
 }
 
