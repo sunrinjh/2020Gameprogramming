@@ -32,7 +32,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
         retval = recv(client_sock, buf, BUFSIZE, 0);
         if (retval == SOCKET_ERROR)
         {
-            cout << "수신() 에러\n";
+            cout << "recv 에러\n";
             break;
         }
         else if (retval == 0)
@@ -160,39 +160,39 @@ int main()
     serveraddr.sin_addr.s_addr = htons(INADDR_ANY);
     return_val = bind(listen_sock, (SOCKADDR*)&serveraddr, sizeof(serveraddr)); // connect가 아니라 bind
 
-    if (return_val == SOCKET_ERROR) printf("바인딩() 에러염\n");
+    if (return_val == SOCKET_ERROR) printf("bind 에러\n");
 
     // listen()
     return_val = listen(listen_sock, SOMAXCONN);
-    if (return_val == SOCKET_ERROR) printf("리슨() 에러염\n");
+    if (return_val == SOCKET_ERROR) printf("listen 에러\n");
 
-    // 데이터 통신에 사용할 변수
+  
     SOCKET client_sock;
     SOCKADDR_IN clientaddr;
     char buf[BUFSIZE + 1];
     int addrlen;
 
-    HANDLE hThread;              // 스레드 핸들
-    DWORD ThreadID;              // 스레드 아이디
+    HANDLE hThread;             
+    DWORD ThreadID;          
 
-    // 서버와 데이터 통신 
+
     while (1)
     {
-        // accept()
+
         addrlen = sizeof(clientaddr);
 
         client_sock = accept(listen_sock, (SOCKADDR*)&clientaddr, &addrlen);
         if (client_sock == INVALID_SOCKET) {
-            printf("accept() 에러\n");
+            printf("accept 에러\n");
             continue;
         }
         
-        printf("TCP 서버, 클라이언트 접속 : IP 주소 = %s, 포트번호 = %d\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
-
+        printf("ip 주소 = %s, internalPort = %d\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
+ 
         hThread = CreateThread(NULL, 0, ProcessClient, (LPVOID)client_sock, 0, &ThreadID);
         if (hThread == NULL)
         {
-            printf("스레드 생성 실패ㅠㅠ\n");
+            printf("쓰레드생성실패\n");
         }
         else
         {

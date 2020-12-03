@@ -227,7 +227,7 @@ void TestScene::Move(float eTime)
 	float playerY = player->Pos().y;
 
 	//鸥老 啊款单俊 乐绰瘤 八荤
-	if ((abs(fmod(playerX, 64)) < 2) && (abs(fmod(playerY, 64)) < 2)) {
+	if ((abs(fmod(playerX, 64)) < 5) && (abs(fmod(playerY, 64)) < 5)) {
 		//面倒 贸府
 		int relativeX = round(playerX) / 64;
 		int relativeY = round(playerY) / 64;
@@ -350,11 +350,11 @@ void TestScene::EatFood()
 	if ((abs(fmod(playerX, 64)) < 5) && (abs(fmod(playerY, 64)) < 5)) {
 		//面倒 贸府
 		int relativeX = round(playerX) / 64;
-		int relativeY = round(playerY) / 64 * sizeof(map[0]) / sizeof(map[0][0]);
+		int relativeY = round(playerY) / 64;
 		
-		if (tiles[relativeY + relativeX]->GetEaten() == false) {
-			tiles[relativeY + relativeX]->SetEaten(true);
-			if (tiles[relativeY + relativeX]->Name() == "Food") {
+		if (tiles[relativeY * sizeof(map[0]) / sizeof(map[0][0]) + relativeX]->GetEaten() == false) {
+			tiles[relativeY * sizeof(map[0]) / sizeof(map[0][0]) + relativeX]->SetEaten(true);
+			if (tiles[relativeY * sizeof(map[0]) / sizeof(map[0][0]) + relativeX]->Name() == "Food") {
 
 				foodCounter--;
 				if (foodCounter <= 0) {

@@ -3,9 +3,9 @@
 #include <Zero.h>
 #include "ZeroConsole.h"
 #include "TitleScene.h"
-
+#include "SocketClient.h"
 //이 변수를 주석처리하면 콘솔창 안뜬다.
-ZeroConsole g_Console;
+//ZeroConsole g_Console;
 
 INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, INT)
 {
@@ -15,20 +15,20 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, INT)
 	ZeroApp->RegisterWindowSize(WindowWidth, WindowHeight);
 	WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, ZeroApp->MsgProc, 0L, 0L,
 					  GetModuleHandle(NULL), NULL, NULL, NULL, NULL,
-					  L"Engine2D", NULL };
+					  L"MultiPlayer Pacman", NULL };
 	RegisterClassEx(&wc);
 
 	srand(GetTickCount());
 
 	// WS_EX_TOPMOST | WS_POPUP :: 전체화면 모드
 	// WS_OVERLAPPEDWINDOW		:: 창화면 모드
-	HWND hWnd = CreateWindow(L"Engine2D", L"Element Dungeon",
+	HWND hWnd = CreateWindow(L"MultiPlayer Pacman", L"MultiPlayer Pacman",
 		WS_OVERLAPPEDWINDOW, 100, 0, WindowWidth, WindowHeight,
 		GetDesktopWindow(), NULL, wc.hInstance, NULL);
 
 	ZeroApp->SetHwnd(hWnd);
 
-	if (SUCCEEDED(ZeroApp->InitD3D(hWnd, false))) //전체화면을 하려면 true로
+	if (SUCCEEDED(ZeroApp->InitD3D(hWnd, true))) //전체화면을 하려면 true로
 	{
 
 		ShowWindow(hWnd, SW_SHOWDEFAULT);
@@ -52,8 +52,9 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, INT)
 		}
 	}
 	//종료
+	Socket->CloseServer();
 	ZeroSceneMgr->Clear();
 
-	UnregisterClass(L"Engine2D", wc.hInstance);
+	UnregisterClass(L"MultiPlayer Pacman", wc.hInstance);
 	return 0;
 }

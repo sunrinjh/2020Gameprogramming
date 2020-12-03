@@ -17,6 +17,8 @@ SocketClient::~SocketClient()
 
 void SocketClient::MakeServer()
 {
+	si.wShowWindow = SW_HIDE;
+	si.dwFlags = STARTF_USESHOWWINDOW;
 	CreateProcess(_T("SocketServer.exe"), NULL, NULL, NULL, false, 0, NULL, NULL, &si, &pi);
 }
 void SocketClient::CloseServer() {

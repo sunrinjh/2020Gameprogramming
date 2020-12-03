@@ -6,15 +6,17 @@ CreateRoom::CreateRoom()
 	Socket->MakeServer();
 	waitFont = new ZeroFont(60, "대기중입니다", "둥근모꼴", "Resources/Fonts/DungGeunMo.ttf");
 	errorFont = new ZeroFont(60, "", "둥근모꼴", "Resources/Fonts/DungGeunMo.ttf");
+	playerCounterFont = new ZeroFont(60, "현재 인원 : 1", "둥근모꼴" , "Resources/Fonts/DungGeunMo.ttf");
 	startSprite = new ZeroSprite("Resources/Sprites/UI/start.png");
 
 	waitFont->SetColor(0xFF000000);
 	errorFont->SetColor(0xFFFF0000);
-
+	playerCounterFont->SetColor(0xFF000000);
 
 
 	PushScene(startSprite);
 	PushScene(waitFont);
+	PushScene(playerCounterFont);
 	waitFont->SetPos(780, 120);
 	errorFont->SetPos(600, 180);
 	startSprite->SetPos(SCREEN_WIDTH/2 - startSprite->Width() / 2, 500);
@@ -37,12 +39,18 @@ void CreateRoom::Render()
 	startSprite->Render();
 	errorFont->Render();
 	waitFont->Render();
+	playerCounterFont->Render();
 }
 
 void CreateRoom::Update(float eTime)
 {
 	ZeroIScene::Update(eTime);
+	string s = "현재 인원 : ";
+	s.append(to_string(Socket->GetCurrentPlayerNumber()));
+	playerCounterFont->SetString(s);
 	if (ZeroInputMgr->GetKey(VK_LBUTTON) == INPUTMGR_KEYDOWN && startSprite->IsOverlapped(ZeroInputMgr->GetClientPoint())) {
+		
+
 		switch (Socket->GetCurrentPlayerNumber()) {
 		case 2:
 			Socket->SendStringToServer("start\0");

@@ -6,6 +6,7 @@ class CreateRoom : public ZeroIScene
 private:
 	ZeroFont* waitFont;
 	ZeroFont* errorFont;
+	ZeroFont* playerCounterFont;
 	ZeroSprite* startSprite;
 	bool waitForClient;
 	int roomsize;
