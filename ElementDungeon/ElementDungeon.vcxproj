@@ -159,6 +159,7 @@
     <ClCompile Include="MapBase.cpp" />
     <ClCompile Include="MapManager.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="SocketClient.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -180,6 +181,8 @@
     <ClInclude Include="MapBase.h" />
     <ClInclude Include="MapManager.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PowerUp.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SocketClient.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TestScene.h" />
@@ -187,6 +190,12 @@
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="VirtualPlayer.h" />
     <ClInclude Include="Wall.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ElementDungeon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

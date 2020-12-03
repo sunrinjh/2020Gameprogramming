@@ -15,6 +15,15 @@ SocketClient::~SocketClient()
 {
 }
 
+void SocketClient::MakeServer()
+{
+	CreateProcess(_T("SocketServer.exe"), NULL, NULL, NULL, false, 0, NULL, NULL, &si, &pi);
+}
+void SocketClient::CloseServer() {
+	TerminateProcess(pi.hProcess, 0);
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
+}
 void SocketClient::Init()
 {
 	cout << "SocketClient Init" << endl;

@@ -49,6 +49,9 @@
     <ClCompile Include="Food.cpp">
       <Filter>Tiles</Filter>
     </ClCompile>
+    <ClCompile Include="PowerUp.cpp">
+      <Filter>Tiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -93,9 +96,13 @@
     <ClInclude Include="JoinRoom.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Food.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="PowerUp.h">
+      <Filter>Tiles</Filter>
     </ClInclude>
+    <ClInclude Include="Food.h">
+      <Filter>Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="헤더 파일">
@@ -110,5 +117,11 @@
     <Filter Include="Tiles">
       <UniqueIdentifier>{dc48baee-4934-4569-bdd2-59a9f367bb37}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ElementDungeon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\icon.ico" />
   </ItemGroup>
 </Project>

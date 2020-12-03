@@ -5,7 +5,8 @@
 class SocketClient
 {
 private:
-
+    STARTUPINFO si = { 0 };
+    PROCESS_INFORMATION pi = { 0 };
     WSAData wsaData;
     SOCKET hSocket;
     SOCKADDR_IN tAddr = {};
@@ -22,6 +23,8 @@ public:
 
     SocketClient();
     ~SocketClient();
+    void MakeServer();
+    void CloseServer();
     void Init();
     int Init(string ip);
     void SetIp(string ip);

@@ -4,13 +4,14 @@
 #include "TestScene.h"
 JoinRoom::JoinRoom()
 {
-	ip = "호스트의 IP를 입력해주세요. 정확하게 입력했는데 접속이 안되면 1234포트를 열어달라고 찡찡대면 됩니다.";
-	ipFont = new ZeroFont(30, "", "굴림");
-	errorMessage = new ZeroFont(30, "", "굴림");
+	ip = "호스트의 IP를 입력하고 엔터를 눌러주세요. 정확하게 입력했는데 접속이 안되면 1234포트를 열어달라고 찡찡대면 됩니다.";
+	ipFont = new ZeroFont(30, "","둥근모꼴", "Resources/Fonts/DungGeunMo.ttf");
+	errorMessage = new ZeroFont(30, "", "둥근모꼴", "Resources/Fonts/DungGeunMo.ttf");
 	
 	ipFont->SetColor(0xFF000000);
-	errorMessage->SetColor(0xFF00FFFF);
+	errorMessage->SetColor(0xFFFF0000);
 	errorMessage->SetPos(0, 30);
+	ipFont->SetPos(0, 180);
 	serverJoined = false;
 
 	//ip.clear();
@@ -44,8 +45,10 @@ void JoinRoom::Update(float eTime)
 			if (Socket->Init(ip) == SOCKET_ERROR) {
 				errorMessage->SetString("접속 오류");
 			}
-			Socket->JoinServer();
-			serverJoined = true;
+			else {
+				Socket->JoinServer();
+				serverJoined = true;
+			}
 		}
 		else {
 			errorMessage->SetString("정확하지 않은 ip 값입니다");

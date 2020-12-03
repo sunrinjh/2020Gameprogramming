@@ -49,9 +49,15 @@ DWORD WINAPI ProcessClient(LPVOID arg)
             retval = send(client_sock, to_string(playerNumber).c_str(),to_string(playerNumber).size(), 0);
 
         }
-        if ((strcmp(buf,"start")) == 0) {
+        if ((strcmp(buf, "start")) == 0) {
             gamestate = "start";
             
+        }
+        if ((strcmp(buf, "gameclear")) == 0) {
+            gamestate = "gameclear";
+        }
+        if ((strcmp(buf, "gameover")) == 0) {
+            gamestate = "gameover";
         }
         if ((strcmp(buf, "gamestate")) == 0) {
             retval = send(client_sock, gamestate.c_str(), gamestate.size(), 0);

@@ -4,9 +4,9 @@
 class CreateRoom : public ZeroIScene
 {
 private:
-	ZeroFont* clickNumberToMakeRoom;
-	ZeroFont* currentPlayerCount;
-	ZeroFont* errorMessage;
+	ZeroFont* waitFont;
+	ZeroFont* errorFont;
+	ZeroSprite* startSprite;
 	bool waitForClient;
 	int roomsize;
 public:

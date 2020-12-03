@@ -5,6 +5,9 @@
 
 TitleScene::TitleScene()
 {
+	ZeroSoundMgr->PushSound("Resources/Sounds/bgm.mp3", "bgm");
+	ZeroSoundMgr->PushChannel("bgm", "bgmChannel");
+	ZeroSoundMgr->SetChannelMode("bgmChannel", FMOD_LOOP_NORMAL);
 	createSprite = new ZeroSprite("Resources/Sprites/UI/StartScene/create.png");
 	joinSprite = new ZeroSprite("Resources/Sprites/UI/StartScene/join.png");
 	backgroundSprite = new ZeroSprite("Resources/Sprites/UI/StartScene/background.png");

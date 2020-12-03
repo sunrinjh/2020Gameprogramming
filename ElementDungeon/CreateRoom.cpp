@@ -3,23 +3,23 @@
 #include "TestScene.h"
 CreateRoom::CreateRoom()
 {
-	ShellExecute(NULL, _T("open"), _T("SocketServer.exe"), NULL, NULL, SW_SHOW);
-	clickNumberToMakeRoom = new ZeroFont(30, "대기중입니다", "궁서");
-	errorMessage = new ZeroFont(30, "", "궁서");
-	currentPlayerCount = new ZeroFont(30, "1", "궁서");
+	Socket->MakeServer();
+	waitFont = new ZeroFont(60, "대기중입니다", "둥근모꼴", "Resources/Fonts/DungGeunMo.ttf");
+	errorFont = new ZeroFont(60, "", "둥근모꼴", "Resources/Fonts/DungGeunMo.ttf");
+	startSprite = new ZeroSprite("Resources/Sprites/UI/start.png");
+
+	waitFont->SetColor(0xFF000000);
+	errorFont->SetColor(0xFFFF0000);
 
 
-	currentPlayerCount->SetColor(0xFF000000);
-	clickNumberToMakeRoom->SetColor(0xFF000000);
-	errorMessage->SetColor(0xFF000000);
 
-
-	PushScene(errorMessage);
-	PushScene(clickNumberToMakeRoom);
-	PushScene(currentPlayerCount);
-	currentPlayerCount->SetPos(0, 30);
-	errorMessage->SetPos(0, 60);
+	PushScene(startSprite);
+	PushScene(waitFont);
+	waitFont->SetPos(780, 120);
+	errorFont->SetPos(600, 180);
+	startSprite->SetPos(SCREEN_WIDTH/2 - startSprite->Width() / 2, 500);
 	waitForClient = false;
+
 	Socket->Init();
 	Socket->JoinServer();
 	Socket->GetPlayerNumber();
@@ -34,17 +34,15 @@ CreateRoom::~CreateRoom()
 void CreateRoom::Render()
 {
 	ZeroIScene::Render();
-
-	clickNumberToMakeRoom->Render();
-	errorMessage->Render();
-	currentPlayerCount->Render();
+	startSprite->Render();
+	errorFont->Render();
+	waitFont->Render();
 }
 
 void CreateRoom::Update(float eTime)
 {
 	ZeroIScene::Update(eTime);
-	currentPlayerCount->SetString(Socket->GetCurrentPlayerNumber());
-	if (ZeroInputMgr->GetKey(VK_SPACE) == INPUTMGR_KEYDOWN) {
+	if (ZeroInputMgr->GetKey(VK_LBUTTON) == INPUTMGR_KEYDOWN && startSprite->IsOverlapped(ZeroInputMgr->GetClientPoint())) {
 		switch (Socket->GetCurrentPlayerNumber()) {
 		case 2:
 			Socket->SendStringToServer("start\0");
@@ -55,7 +53,7 @@ void CreateRoom::Update(float eTime)
 		case 4:
 			break;
 		default:
-			errorMessage->SetString("인원이 충분하지 않습니다");
+			errorFont->SetString("인원이 충분하지 않습니다");
 			break;
 		}
 	}
@@ -63,4 +61,7 @@ void CreateRoom::Update(float eTime)
 		cout << Socket->GetGameState();
 		ZeroSceneMgr->ChangeScene(new TestScene());
 	}
+	//if (ZeroInputMgr->GetKey(VK_ESCAPE) == INPUTMGR_KEYDOWN) {
+	//	Socket->CloseServer();
+	//}
 }

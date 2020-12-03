@@ -2,29 +2,41 @@
 #include "TestScene.h"
 #include "Wall.h"
 #include "Food.h"
-
-
+#include "PowerUp.h"
+#include "TitleScene.h"
 TestScene::TestScene()
 {
 	foodCounter = 0;
+	backgroundSprite = new ZeroSprite("Resources/Sprites/backgroundSprite.png");
+	pacmanWinSprite = new ZeroSprite("Resources/Sprites/UI/pacmanwin.png");
+	ghostWinSprite = new ZeroSprite("Resources/Sprites/UI/ghostwin.png");
 	switch (playerNumber = Socket->GetPlayerNumber()) {
 	case 1:
 		player = new Player(0);
 		virtualPlayer = new VirtualPlayer(1);
 		moveSpeed = 128;
+		playerLocation[0] = 1;
+		playerLocation[1] = 1;
+		player->SetPos(playerLocation[0] * 64, playerLocation[1] * 64);
 		break;
 	case 2:
 		player = new Player(1);
 		virtualPlayer = new VirtualPlayer(0);
 		moveSpeed = 144;
+		playerLocation[0] = 20;
+		playerLocation[1] = 14;
+		player->SetPos(playerLocation[0] * 64, playerLocation[1] * 64);
 		break;
 	default:
 		player = new Player(0);
 		virtualPlayer = new VirtualPlayer(1);
 		moveSpeed = 128;
+		playerLocation[0] = 1;
+		playerLocation[1] = 1;
+		player->SetPos(playerLocation[0] * 64, playerLocation[1] * 64);
 		break;
 	}
-	playerHealth = 3;
+	playerHealth = 2;
 	virtualPlayer->SetRotCenter(32, 32);
 	player->SetRotCenter(32, 32);
 	isMoveable = true;
@@ -38,19 +50,27 @@ TestScene::TestScene()
 				tiles.push_back(new Wall());
 				tiles.back()->SetPos(j * 64, i * 64);
 				tiles.back()->SetName("Wall");
+				PushScene(tiles.back());
 				break;
 			case 0:
 				tiles.push_back(new Food());
 				tiles.back()->SetPos(j * 64, i * 64);
 				tiles.back()->SetName("Food");
+				PushScene(tiles.back());
 				foodCounter++;
+				break;
+			case 2:
+				tiles.push_back(new PowerUp());
+				tiles.back()->SetPos(j * 64, i * 64);
+				tiles.back()->SetName("PowerUp");
+				PushScene(tiles.back());
 				break;
 			}
 		}
 	}
-	playerLocation[0] = 1;
-	playerLocation[1] = 1;
-	player->SetPos(playerLocation[0] * 64, playerLocation[1] * 64);
+	ghostMoveTimer = -1;
+	godModTimer = -1;
+	powerUpTimer = -1;
 	direction = Direction::RIGHT;
 
 
@@ -66,6 +86,7 @@ void TestScene::Update(float eTime)
 	ZeroIScene::Update(eTime);
 	float virtualPlayerPos[2] = { virtualPlayer->Pos().x, virtualPlayer->Pos().y };
 	float playerPos[2] = { player->Pos().x, player->Pos().y };
+	
 	player->Update(eTime);
 	virtualPlayer->Update(eTime);
 	Move(eTime);
@@ -75,29 +96,80 @@ void TestScene::Update(float eTime)
 	switch (playerNumber)
 	{
 	case 1:
+		powerUpTimer -= eTime;
+		godModTimer -= eTime;
 		virtualPlayer->SetPos(Socket->GetPlayer2Pos()->x, Socket->GetPlayer2Pos()->y);
-		if (player->GetCurrentSprite()->IsOverlapped(virtualPlayer->GetCurrentSprite()))
-		{
-			cout << "面倒!" << endl;
+		if (godModTimer < 0 && powerUpTimer < 0) {
+			if (player->GetCurrentSprite()->IsOverlapped(virtualPlayer->GetCurrentSprite()))
+			{
+				playerHealth--;
+				godModTimer = 1.5;
+				if (playerHealth <= 0){
+					Socket->SendStringToServer("gameover");
+					ghostWin = true;
+				}
+			}
 		}
 		break;
 	case 2:
+		ghostMoveTimer -= eTime;
+		if (ghostMoveTimer < 0) {
+			if (player->GetCurrentSprite()->IsOverlapped(virtualPlayer->GetCurrentSprite()))
+			{
+				ghostMoveTimer = 1.5;
+				playerHealth--;
+				if (playerHealth <= 0) {
+					Socket->SendStringToServer("gameover");
+					ghostWin = true;
+				}
+			}
+		}
 		virtualPlayer->SetPos(Socket->GetPlayer1Pos()->x, Socket->GetPlayer1Pos()->y);
 		break;
 	default:
 		break;
 	}
 	TurnAnimation(playerPos[0],playerPos[1], virtualPlayerPos[0], virtualPlayerPos[1]);
+	if (pacmanWin) {
+		winTimer += eTime;
+		if (winTimer > 2) {
+			
+			if (playerNumber == 1) {
+				Socket->CloseServer();
+				
+			}
+			PostQuitMessage(0);
+		}
+
+	}
+	else if (ghostWin) {
+		winTimer += eTime;
+		if (winTimer > 2) {
+			
+			if (playerNumber == 1) {
+				Socket->CloseServer();
+				
+			}
+			PostQuitMessage(0);
+		}
+	}
 }
 
 void TestScene::Render()
 {
 	ZeroIScene::Render();
+	backgroundSprite->Render();
 	for (auto iter = tiles.begin(); iter != tiles.end(); iter++) {
 		(*iter)->Render();
 	}
 	player->Render();
 	virtualPlayer->Render();
+	if (pacmanWin) {
+		pacmanWinSprite->Render();
+	}
+	else if (ghostWin) {
+		ghostWinSprite->Render();
+	}
 }
 
 void TestScene::Move(float eTime)
@@ -194,7 +266,7 @@ void TestScene::Move(float eTime)
 	
 	
 	//弥辆 捞悼 贸府
-	if (isMoveable) {
+	if (isMoveable && ghostMoveTimer < 0) {
 		switch (direction)
 		{
 		case TestScene::Direction::RIGHT:
@@ -278,13 +350,21 @@ void TestScene::EatFood()
 	if ((abs(fmod(playerX, 64)) < 5) && (abs(fmod(playerY, 64)) < 5)) {
 		//面倒 贸府
 		int relativeX = round(playerX) / 64;
-		int relativeY = round(playerY) / 64;
+		int relativeY = round(playerY) / 64 * sizeof(map[0]) / sizeof(map[0][0]);
 		
-		if(tiles[(relativeY) * sizeof(map[0])/sizeof(map[0][0]) + relativeX]->GetEaten() == false){
-			tiles[(relativeY) * sizeof(map[0])/sizeof(map[0][0]) + relativeX]->SetEaten(true);
-			foodCounter--;
-			if (foodCounter == 0) {
-				cout << "gameover" << endl;
+		if (tiles[relativeY + relativeX]->GetEaten() == false) {
+			tiles[relativeY + relativeX]->SetEaten(true);
+			if (tiles[relativeY + relativeX]->Name() == "Food") {
+
+				foodCounter--;
+				if (foodCounter <= 0) {
+					cout << "gameclear" << endl;
+					Socket->SendStringToServer("gameclear");
+					pacmanWin = true;
+				}
+			}
+			else if (tiles[relativeY + relativeX]->Name() == "PowerUp") {
+				powerUpTimer = 3;
 			}
 		}
 		
